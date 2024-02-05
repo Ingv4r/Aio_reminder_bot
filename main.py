@@ -1,42 +1,31 @@
-from datetime import datetime
-
 import asyncio
 import logging
 import sys
 
-from aiogram import Bot, Dispatcher, F
+from aiogram import Bot, Dispatcher
 
-from core.handlers import basic, apsched
+from core.handlers import apsched, basic
+from core.middlewares.apscheduler_middleware import SchedulerMiddleware
 from core.settings import settings
-from apscheduler.schedulers.asyncio import AsyncIOScheduler
-from aiogram.filters import CommandStart
-
-bot = Bot(token=settings.bots.bot_token, parse_mode="HTML")
+from core.utils.schedule import start_scheduler
 
 
 async def start():
+    bot = Bot(token=settings.bots.bot_token, parse_mode="HTML")
     dp = Dispatcher()
-    scheduler = AsyncIOScheduler(timezone="Europe/Moscow")
-    scheduler.add_job(
-        apsched.send_message_cron,
-        trigger="cron",
-        hour=22,
-        minute=52,
-        start_date=datetime.now(),
-        kwargs={"bot": bot}
-    )
-    scheduler.start()
+    dp.include_routers(basic.router, apsched.router)
 
-    dp.startup.register(basic.start_bot)
-    dp.shutdown.register(basic.stop_bot)
-    dp.message.register(basic.get_photo, F.photo)
-    dp.message.register(basic.get_start, CommandStart())
-    dp.message.register(basic.get_hello, F.text.lower().in_({"привет", "hello"}))
+    start_scheduler(bot)
+
     try:
+        await bot.delete_webhook(drop_pending_updates=True)
         await dp.start_polling(bot)
     finally:
         await bot.session.close()
 
-if __name__ == '__main__':
-    logging.basicConfig(level=logging.INFO, stream=sys.stdout)
+
+if __name__ == "__main__":
+    logging.basicConfig(
+        level=logging.INFO, stream=sys.stdout, format="%(asctime)s %(message)s"
+    )
     asyncio.run(start())
