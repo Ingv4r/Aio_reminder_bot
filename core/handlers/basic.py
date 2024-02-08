@@ -6,7 +6,6 @@ from aiogram.utils.formatting import Bold, Text
 from core.settings import settings
 from core.utils.commands import set_commands
 
-HIGHEST_RESOL_INDEX = -1
 
 router = Router()
 
@@ -20,13 +19,6 @@ async def start_bot(bot: Bot):
 @router.shutdown()
 async def stop_bot(bot: Bot):
     await bot.send_message(settings.bots.admin_id, text="Бот становлен")
-
-
-@router.message(F.photo)
-async def get_photo(message: Message, bot: Bot):
-    file = await bot.get_file(message.photo[HIGHEST_RESOL_INDEX].file_id)
-    await bot.download_file(file.file_path, "saving images/image.jpg")
-    await message.answer("Image saved")
 
 
 @router.message(CommandStart())
