@@ -1,6 +1,9 @@
 from aiogram.fsm.state import StatesGroup, State
 
 
-class SetRemindTime(StatesGroup):
-    hours = State()
-    minutes = State()
+class SetRemind(StatesGroup):
+    choosing_remind_name = State()
+    choosing_remind_time = State()
+    choosing_remind_message = State()
+
+

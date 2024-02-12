@@ -8,9 +8,13 @@ async def set_commands(bot: Bot):
         BotCommand(command="help", description="Помощь"),
         BotCommand(command="cancell", description="Сбросить"),
         BotCommand(
-            command="set_time",
-            description="Задать время напоминаний в формате hh-hh:mm-mm",
+            command="set_remind_time",
+            description="Задать время напоминаний",
         ),
+        BotCommand(
+            command="set_remind_message",
+            description="Задать сообщение напоминаний"
+        )
     ]
 
     await bot.set_my_commands(commands, BotCommandScopeDefault())

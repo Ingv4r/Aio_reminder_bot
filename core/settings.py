@@ -13,21 +13,23 @@ class Bots:
 
 
 @dataclass
+class SchedulerParams:
+    remind_hour: int
+    remind_minute: int
+    remind_message: str = "Текст не задан"
+
+
+@dataclass
 class Settings:
     bots: Bots
-    remind_hours_range: list[int]
-    remind_minutes_range: list[int]
-    remind_message: str
+    scheduler_params: SchedulerParams
 
 
 def get_settings():
     return Settings(
         bots=Bots(bot_token=getenv("TOKEN"), admin_id=int(getenv("ADMIN_ID"))),
-        remind_message="Напоминание не выставлено",
-        remind_hours_range=[0, 23],
-        remind_minutes_range=[0, 59],
+        scheduler_params=SchedulerParams(remind_hour=0, remind_minute=0)
     )
 
 
 settings = get_settings()
-print(settings)
