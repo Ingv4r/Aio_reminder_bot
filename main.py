@@ -8,7 +8,6 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 from core.handlers import remind, basic, files
 from core.settings import settings
-from core.utils.scheduler import scheduler
 
 
 async def start():
@@ -18,8 +17,6 @@ async def start():
     # Принудительно настраиваем фильтр на работу только в чатах один-на-один с ботом
     dp.message.filter(F.chat.type == "private")
     dp.include_routers(basic.router, remind.router, files.router)
-
-    scheduler.start()
 
     try:
         await bot.delete_webhook(drop_pending_updates=True)

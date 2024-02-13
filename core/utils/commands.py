@@ -8,12 +8,8 @@ async def set_commands(bot: Bot):
         BotCommand(command="help", description="Помощь"),
         BotCommand(command="cancell", description="Сбросить"),
         BotCommand(
-            command="set_remind_time",
-            description="Задать время напоминаний",
-        ),
-        BotCommand(
-            command="set_remind_message",
-            description="Задать сообщение напоминаний"
+            command="addreminder",
+            description="Добавить уведомление"
         )
     ]
 
